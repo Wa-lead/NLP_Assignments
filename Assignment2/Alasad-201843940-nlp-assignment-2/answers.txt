@@ -1,0 +1,452 @@
+================================================================================
+================================================================================
+Name:
+NetID:
+================================================================================
+================================================================================
+Submission Instructions (10 points)
+
+Make sure to follow the submission instructions as specified in the assignment.
+The submission zip file should be uploaded to NYU classes.
+
+================================================================================
+================================================================================
+Task 1 : Let's LM!  (10 points)
+--------------------------------------------------------------------------------
+Question 1.a  (1 point)  What is the effect of this tokenization step?
+Describe the changes in the text.  Hint: check out nonbreaking_prefix.en.
+
+# answer:
+        In the nonbreaking_prefixe.en it desribe end of sentence rules and also some abbreviations.
+
+        The changes it text are that '.' is only seperated of it indicates end of sentence.
+        But '.' is not seperated if it is part of an abbreviation.
+
+Also, clitics are seperated from the word they are attached to.
+--------------------------------------------------------------------------------
+Question 1.b (2 points)  What is the difference between the raw and tokenized
+files in terms of the number of tokens and the number of types (unique tokens)?
+Explain the difference in the numbers given the used tokenization.
+
+# answer:
+        Done the test on the UN corpus with 1-gram model
+        Raw: 36467
+        Tok: 17862
+
+        It seems that the number of tokens is reduced by half. This is due to removal of clitics overall variation of text.
+
+
+
+
+--------------------------------------------------------------------------------
+Question 1.c  (1 point)  What is the total number of 1-gram, 2-gram and 3-gram
+entries?
+
+# answer:
+        ngram 1=17862
+        ngram 2=174767
+        ngram 3=255058
+
+--------------------------------------------------------------------------------
+Question 1.d  (1 point)  What is the purpose of each column in the 1-grams data?
+
+# answer:
+        column1 -> log10(conditional_probability) of the n-gram
+        column2 -> the n-gram
+        column3 -> the log10(backoff_weight)
+
+
+--------------------------------------------------------------------------------
+Question 1.e  (1 point)  Why is there no third column in the 3-grams portion?
+
+# answer:
+        Backoff weights are required only for those N-grams that form a prefix of longer N-grams in the model.
+        The highest-order N-grams in particular will not need backoff weights (they would be useless).
+        Formula:
+        n-gram probability = (count(n-gram) + backoff_weight * count(n-gram - 1)) / count(n-gram - 1)
+
+--------------------------------------------------------------------------------
+Question 1.f  (1 point)  Why is the UN LM perplexity different for the Wikipedia
+and UN?
+
+# answer:
+        It is because the UN LM is trained on UN corpus, which makes it fitted to UN corpus.
+        Wiki is slightly off domain and hence the perplexity is higher.
+
+
+
+--------------------------------------------------------------------------------
+Question 1.g  (1 point)  Compute the OOV rate for the UN and Wikipedia test files?
+(% of OOVs/words).
+
+# answer:
+        OOV_UN% = 16/19169 = 0.0008
+        OOV_Wiki% = 3037/13912 = 0.218
+
+
+--------------------------------------------------------------------------------
+Question 1.h (1 point) Why is the UN LM OOV rate different for the Wikipedia and UN?
+
+# answer:
+        Goes back to the previous question. The UN LM is trained on UN corpus, which makes it fitted to UN corpus.
+        Wiki is slightly off domain and hence the OOV rate is higher.
+
+
+--------------------------------------------------------------------------------
+Question 1.i (1 point) Provide the text you randomly generated.
+How is its fluency? How is it in terms of coherence?
+
+# answer:
+        Generated sentence:
+        Having also that the goal of its deep . Recalls the Commission on Human Rights and other public ,
+
+        The sentence is not coherent but the fluency (if I understand it correctly as how the structure is) is not too bad.
+
+================================================================================
+================================================================================
+Task 2 : How Many Ways to LM? (40 points)
+
+Question 2.1.a (4 points). Fill in the below table.
+
+
+
+****************************************************************************
+                           |  Words |   OOV   |  OOV%   |     ppl          |
+****************************************************************************
+UNCorpus.test:             |16693   1891      |         |28.17073          |
+----------------------------------------------------------------------------
+UNCorpus.test.tok:         |19169   |16       |         |19.39789          |
+----------------------------------------------------------------------------
+UNCorpus.test.tok.lc:      |19169   |581      |         |60.6048           |
+----------------------------------------------------------------------------
+UNCorpus.test.tok.lc.port: |19169   |4372     |         |155.9641          |
+----------------------------------------------------------------------------
+UNCorpus.test.tok.lc.bpe:  |19447   |907      |         |61.75736          |
+----------------------------------------------------------------------------
+----------------------------------------------------------------------------
+Wiki.test:                |11964    |3754     |0.31     |1601.552          |
+----------------------------------------------------------------------------
+Wiki.test.tok:            |13912    |3037     |0.21     |1364.576          |
+----------------------------------------------------------------------------
+Wiki.test.tok.lc:         |13912    |3113     |0.22     |1349.682          |
+ ---------------------------------------------------------------------------
+Wiki.test.tok.lc.port:    |13912    |4762     |0.34     |800.704           |
+----------------------------------------------------------------------------
+Wiki.test.tok.lc.bpe:     |20361    |8756     |0.43     |1185.786          |
+----------------------------------
+Fair.test:                 |4388    |1966     |0.45     |2235.367          |
+Fair.test.tok:             |5648    |1761     |0.31     |1918.732          |
+Fair.test.tok.lc:          |5648    |1675     |0.3      |2665.649          |
+Fair.test.tok.lc.port:     |5648    |1971     |0.35     |2210.78           |
+Fair.test.tok.lc.bpe:      |8123    |3428     |0.42     |3624.764          |
+
+
+--------------------------------------------------------------------------------
+Question 2.1.b (2 points).  What can you say about the interaction between
+tokenizations and OOV rate for in-domain and out-of-domain cases?
+
+# answer:
+        Tokenizer the tend to be in the harsher side ( porter and bpe ) tend to have more OOV in training.
+        However, they tend to generalize better in out-of-domain with generally less OOVs.
+
+--------------------------------------------------------------------------------
+Question 2.1.c (2 points).  What can you say about the interaction between
+tokenizations and perplexity?
+
+# answer:
+        Tokenizer the tend to be in the harsher side ( porter and bpe ) tend to generalize better in testing.
+        Which means that they tend to score less perplexity in test environments.
+
+--------------------------------------------------------------------------------
+Question 2.1.d (2 points).  What do the results above suggest about the
+similariy between the Wiki and UN, vs My Fair Lady and the UN?
+
+# answer:
+        The UN and Wiki are more similar than the UN and My Fair Lady.
+        The perplexity of the model trained on UN is lower Wiki than My Fair Lady.
+
+
+
+
+Question 2.2.a (4 points). Fill in the below table.
+
+
+
+*****************************************************************************
+                 |  Train Size |  Words  |   OOV   |  OOV%   |     ppl      |
+*****************************************************************************
+UNCorpus.test    |   70000     |19169    |11       |0.0      |8.660498      |
+-----------------------------------------------------------------------------
+UNCorpus.test    |   35000     |19169    |87       |0.0      |18.28498      |
+-----------------------------------------------------------------------------
+UNCorpus.test    |   17500     |19169    |190      |0.01     |23.42346      |
+-----------------------------------------------------------------------------
+UNCorpus.test    |    8750     |19169    |259      |0.01     |31.24487      |
+-----------------------------------------------------------------------------
+UNCorpus.test    |    4375     |19169    |793      |793      |90.30143      |
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+Wiki.test:      |   70000     |13912     |2750     |0.2      |1922.438      |
+-----------------------------------------------------------------------------
+Wiki.test:      |   35000     |13912     |3003     |0.22     |1555.253      |
+-----------------------------------------------------------------------------
+Wiki.test:      |   17500     |13912     |3278     |0.24     |1111.121      |
+-----------------------------------------------------------------------------
+Wiki.test:      |    8750     |13912     |3544     |0.25     |766.5847      |
+-----------------------------------------------------------------------------
+Wiki.test:      |    4375     |13912     |3849     |0.28     |658.0301      |
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+Fair.test:       |   70000     |5648     |1559     |0.28     |3741.597      |
+-----------------------------------------------------------------------------
+Fair.test:       |   35000     |5648     |1649     |0.29     |2905.174      |
+-----------------------------------------------------------------------------
+Fair.test:       |   17500     |5648     |1812     |0.32     |1860.581      |
+-----------------------------------------------------------------------------
+Fair.test:       |    8750     |5648     |1909     |0.34     |1188.972      |
+-----------------------------------------------------------------------------
+Fair.test:       |    4375     |5648     |2087     |0.37     |926.5898      |
+-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+Question 2.2.b (2 points).  What can you say about the relationship between the
+training size and OOV rate?
+
+# answer:
+        The higher the training size, the lower the OOV rate is.
+
+
+--------------------------------------------------------------------------------
+Question 2.2.c (2 points).  What can you say about the relationship between the
+training size and perplexity for in domain data?
+
+# answer:
+        The higher the training size, the lower the perplexity is.
+
+--------------------------------------------------------------------------------
+Question 2.2.d (2 points).  What can you say about the relationship between the
+training size and perplexity for out-of-domain data? Is it similar or
+different to in-domain data?
+
+# answer:
+        The higher the training size, the higher the perplexity is for out-of-domain data.
+        This is directly related to the concept of overfitting.
+
+        It is different case from in-domain-data, because in-domain-data is more similar to the training data,
+
+
+--------------------------------------------------------------------------------
+Question 2.3.a (4 points). Fill in the below table.
+
+
+
+*****************************************************************************
+                 |             |  Words  |   OOV   |  OOV%   |     ppl      |
+*****************************************************************************
+UNCorpus.test    | Order 1.lm  |19169    |11       |0.0      |414.7638      |
+-----------------------------------------------------------------------------
+UNCorpus.test    | Order 2.lm  |19169    |11       |0.0      |32.05454      |
+-----------------------------------------------------------------------------
+UNCorpus.test    | Order 3.lm  |19169    |11       |0.0      |8.660498      |
+-----------------------------------------------------------------------------
+UNCorpus.test    | Order 4.lm  |19169    |11       |0.0      |4.906767      |
+----------------------------------------------------------------------------
+UNCorpus.test    | Order 5.lm  |19169    |11       |0.0      |3.96369       |
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+Wiki.test:      | Order 1.lm   |13912    |2750     |0.2      |1117.76       |
+-----------------------------------------------------------------------------
+Wiki.test:      | Order 3.lm   |13912    |2750     |0.2      |1584.686      |
+-----------------------------------------------------------------------------
+Wiki.test:      | Order 3.lm   |13912    |2750     |0.2      |1922.438      |
+-----------------------------------------------------------------------------
+Wiki.test:      | Order 4.lm   |13912    |2750     |0.2      |1982.377      |
+-----------------------------------------------------------------------------
+Wiki.test:      | Order 5.lm   |13912    |2750     |0.2      |1987.864      |
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+Fair.test:       | Order 1.lm  |5648     |1559     |0.28     |1356.357      |
+-----------------------------------------------------------------------------
+Fair.test:       | Order 2.lm  |5648     |1559     |0.28     |3225.199      |
+-----------------------------------------------------------------------------
+Fair.test:       | Order 3.lm  |5648     |1559     |0.28     |3741.597      |
+-----------------------------------------------------------------------------
+Fair.test:       | Order 4.lm  |5648     |1559     |0.28     |3768.612      |
+-----------------------------------------------------------------------------
+Fair.test:       | Order 5.lm  |5648     |1559     |0.28     |3770.759      |
+-----------------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------------------
+Question 2.3.b (2 points).  What can you say about the relationship between
+the LM order and OOV rate?
+
+# answer:
+        Does not affect it, because all models have seen the same words in the training, and missed the same words in the test.
+
+-------------------------------------------------------------------------------
+Question 2.3.c (2 points).  What can you say about the relationship between the
+LM order and perplexity for in domain data?
+
+# answer:
+        The higher the order, the lower the perplexity is.
+
+-------------------------------------------------------------------------------
+Question 2.3.d (2 points).  What can you say about the relationship between the
+LM order and perplexity for out-of-domain data?   Is it similar or different to
+in-domain data?
+
+
+# answer:
+        The higher the training size, the higher the perplexity is for out-of-domain data.
+        This is directly related to the concept of overfitting.
+
+        It is different case from in-domain-data, because in-domain-data is more similar to the training data,
+
+
+
+
+--------------------------------------------------------------------------------
+Question 2.4.a (4 points). Fill in the below table.
+
+
+
+*****************************************************************************
+                 | Smoothing   |  Words  |   OOV   |  OOV%   |     ppl      |
+*****************************************************************************
+UNCorpus.test    | Add 1       |19169    |11       |0.0      |860.106       |
+-----------------------------------------------------------------------------
+UNCorpus.test    | Add 0.1     |19169    |11       |0.0      |124.0276      |
+-----------------------------------------------------------------------------
+UNCorpus.test    | Good-Turing |19169    |11       |0.0      |3.96369       |
+-----------------------------------------------------------------------------
+UNCorpus.test    | Kneser-Ney  |19169    |11       |0.0      |4.022078      |
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+Wiki.test:      | Add 1        |13912    |2750     |0.2      |1563.158      |
+-----------------------------------------------------------------------------
+Wiki.test:      | Add 0.1      |13912    |2750     |0.2      |1277.944      |
+-----------------------------------------------------------------------------
+Wiki.test:      | Good-Turing  |13912    |2750     |0.2      |1987.864      |
+-----------------------------------------------------------------------------
+Wiki.test:      | Kneser-Ney   |13912    |2750     |0.2      |654.2951      |
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+Fair.test:      | Add 1        |5648     |1559     |0.28     |1670.519      |
+-----------------------------------------------------------------------------
+Fair.test:      | Add 0.1      |5648     |1559     |0.28     |1819.579      |
+-----------------------------------------------------------------------------
+Fair.test:      | Good-Turing  |5648     |1559     |0.28     |3770.759      |
+-----------------------------------------------------------------------------
+Fair.test:      | Kneser-Ney   |5648     |1559     |0.28     |1189.075      |
+-----------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------
+Question 2.4.b (2 points).  What can you say about the relationship between the
+smoothing method and perplexity for in domain data?
+
+# answer:
+        Smoothing increases the in-domain perplexity, because it is trying to avoid overfitting.
+
+-------------------------------------------------------------------------------
+Question 2.4.c (2 points).  What can you say about the relationship between the
+smoothing method and perplexity for out-of-domain data?
+Is it similar or different to in-domain data?
+
+# answer:
+        Smoothing decreases the out-of-domain perplexity, because the model is regularized during training.
+
+
+
+
+--------------------------------------------------------------------------------
+Question 2.4.d (2 points).  What is the best smoothing method overall?
+
+# answer:
+        Kneser-Ney is the best smoothing method overall, because it has the lowest perplexity for all three test sets.
+
+================================================================================
+================================================================================
+Task 3: Guess The Language! (40 points)
+
+
+1. To train on the train data and create a model directory that houses all
+the .lm files:
+
+
+python identify-language.py TRAIN Europarl/train/train modelxid
+
+
+1. To predict the answers for the dev set and print them to STDIN/file
+
+
+python identify-language.py PREDICT Europarl/dev modelxid > dev.predict
+
+
+1. To evaluate the predictions against the gold
+
+
+python identify-language.py EVALUATE Europarl/dev/dev.gold dev.predict
+
+
+
+-------------------------------------------------------------------------------
+-----NOT_ANSWERED---------
+
+
+Question 3.b (5 points) Modify your code to train with one line only from
+training, and to use one line only from the dev files, and to use order 1
+for lm.
+
+
+* Run your system using this training data and report the results on the dev
+set.  (1 point)
+
+
+* It is reasonable to expect the accuracy to go down. Is there a pattern to
+the errors?  (4 points)
+
+
+
+
+
+--------------------------------------------------------------------------------
+Question 3.c (15 points) Using your best model you have, identify the languages
+of the provided test set (Europarl/test).  Provide your answer in a file named
+test.pred. The file should consist of two tab separated columns marking for
+each file test.<n>, its two-character language id.
+
+
+test.1<tab><lang>
+        test.2<tab><lang>
+        ...
+test.15<tab><lang>
+
+Prediction:
+test.1	sk
+test.2	nl
+test.3	fi
+test.4	da
+test.5	de
+test.6	mt
+test.7	ro
+test.8	sl
+test.9	bg
+test.10	en
+test.11	it
+test.12	bg
+test.13	fr
+test.14	cs
+test.15	pl
+
+
+The format should be comparable to Europarl/dev.gold.
+
+
+The points for this question will be based on how many labels your system
+assigns correctly.
+*******************************************************************************
+***********************************END*****************************************
+*******************************************************************************
